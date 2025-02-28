@@ -13,14 +13,13 @@ const allowedOrigins = ["http://localhost:5173", "http://localhost:5174"];
 
 app.use(
   cors({
-    origin: allowedOrigins, // السماح بهذه العناوين فقط
-    credentials: true, // السماح بإرسال الكوكيز والتوكن
+    origin: allowedOrigins, 
+    credentials: true, 
   })
 );
 
-const users = []; // تخزين المستخدمين مؤقتًا في الذاكرة
+const users = []; 
 
-// ✅ تسجيل المستخدم (Sign Up)
 app.post("/signup", (req, res) => {
     const { username, email, password } = req.body;
 
@@ -32,7 +31,6 @@ app.post("/signup", (req, res) => {
     res.json({ success: true, message: "User registered successfully" });
 });
 
-// ✅ تسجيل الدخول (Sign In)
 app.post("/signin", (req, res) => {
     const { username, password } = req.body;
     const user = users.find(u => u.username === username && u.password === password);
@@ -47,7 +45,6 @@ app.post("/signin", (req, res) => {
     res.json({ success: true, message: "Logged in successfully", token });
 });
 
-// ✅ Middleware لحماية الصفحة الشخصية
 const authenticateToken = (req, res, next) => {
     const token = req.cookies.token;
 
@@ -62,12 +59,10 @@ const authenticateToken = (req, res, next) => {
     });
 };
 
-// ✅ الوصول إلى الصفحة الشخصية
 app.get("/profile", authenticateToken, (req, res) => {
     res.json({ success: true, message: `Welcome ${req.user.username} to your profile!` });
 });
 
-// ✅ تسجيل الخروج
 app.post("/logout", (req, res) => {
     res.clearCookie("token");
     res.json({ success: true, message: "Logged out successfully" });
